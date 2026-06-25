@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Game</title>
+  <style>
+    body { margin: 0; background: black; }
+
+    #game {
+      position: relative;
+      width: 800px;
+      margin: auto;
+    }
+
+    #character {
+      width: 100%;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="game">
+  <img id="character" src="idle.png">
+</div>
+
+<script>
+let character = document.getElementById("character");
+
+let frames = [
+  "frame1.png",
+  "frame2.png",
+  "frame3.png",
+  "frame4.png",
+  "frame5.png",
+  "frame6.png",
+  "frame7.png",
+  "frame8.png",
+  "frame9.png"
+];
+
+character.onclick = async function () {
+  for (let i = 0; i < frames.length; i++) {
+    character.src = frames[i];
+    await new Promise(r => setTimeout(r, 500));
+  }
+
+  character.src = "idle.png";
+};
+</script>
+
+</body>
+</html>
