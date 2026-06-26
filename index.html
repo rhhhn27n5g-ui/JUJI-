@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <!-- FIXES MOBILE ZOOM / "FAR AWAY" LOOK -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>Click Game</title>
+
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #game {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    /* CHARACTER (NOW RESPONSIVE FOR MOBILE) */
+    #scene {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 70vw;
+      max-width: 600px;
+    }
+
+    /* CLICK HITBOX (STAYS SMALL) */
+    #hitbox {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 120px;
+      height: 260px;
+      cursor: pointer;
+      background: transparent;
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="game">
+
+  <img id="scene" src="idle.png">
+  <div id="hitbox"></div>
+
+</div>
+
+<script>
+const scene = document.getElementById("scene");
+const hitbox = document.getElementById("hitbox");
+
+let clickCount = 0;
+let busy = false;
+
+// preload cache (keeps animation smooth)
+const cache = {};
+
+function preload(src) {
+  if (cache[src]) return;
+  const img = new Image();
+  img.src = src;
+  cache[src] = img;
+}
+
+// preload everything
+window.onload = () => {
+  preload("idle.png");
+
+  for (let i = 1; i <= 9; i++) {
+    preload(`frame${i}.png`);
+  }
+
+  for (let i = 1; i <= 55; i++) {
+    preload(`smoke${i}.png`);
+  }
+};
+
+
+// CLICK LOGIC
+hitbox.onclick = () => {
+  if (busy) return;
+
+  clickCount++;
+
+  if (clickCount === 1) {
+    playFrames();
+  } else {
+    playSmoke();
+    clickCount = 0;
+  }
+};
+
+
+// FRAMES
+function playFrames() {
+  busy = true;
+
+  let frame = 1;
+  const end = 9;
+
+  const loop = setInterval(() => {
+    scene.src = `frame${frame}.png`;
+    frame++;
+
+    if (frame > end) {
+      clearInterval(loop);
+      scene.src = "idle.png";
+      busy = false;
+    }
+  }, 100);
+}
+
+
+// SMOKE
+function playSmoke() {
+  busy = true;
+
+  let frame = 1;
+  const end = 55;
+
+  const loop = setInterval(() => {
+    scene.src = `smoke${frame}.png`;
+    frame++;
+
+    if (frame > end) {
+      clearInterval(loop);
+      scene.src = "idle.png";
+      busy = false;
+    }
+  }, 80);
+}
+</script>
+
+</body>
+</html>
